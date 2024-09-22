@@ -1,0 +1,62 @@
+
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Loader2 } from "lucide-react"
+
+export default function AIImageGenerator() {
+  const [prompt, setPrompt] = useState("")
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generatedImage, setGeneratedImage] = useState("")
+
+  const handleGenerate = async () => {
+    if (!prompt) return
+
+    setIsGenerating(true)
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    // Use a placeholder image
+    setGeneratedImage(`/placeholder.svg?height=512&width=512&text=${encodeURIComponent(prompt)}`)
+    setIsGenerating(false)
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto p-4 space-y-6">
+      <h1 className="text-2xl font-bold text-center">AI Image Generator</h1>
+      <div className="flex space-x-2">
+        <Input
+          type="text"
+          placeholder="Enter your prompt here..."
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="flex-grow"
+        />
+        <Button onClick={handleGenerate} disabled={isGenerating || !prompt}>
+          {isGenerating ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Generating
+            </>
+          ) : (
+            "Generate"
+          )}
+        </Button>
+      </div>
+      {generatedImage && (
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold">Generated Image:</h2>
+          <div className="relative aspect-square w-full overflow-hidden rounded-lg border border-gray-200">
+            <img
+              src={generatedImage}
+              alt={prompt}
+              className="object-cover"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
